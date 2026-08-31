@@ -6,3 +6,5 @@ __pycache__/
 ts_gridded.nc
 *.ncdata/
 .venv/
+data/
+.venv/
