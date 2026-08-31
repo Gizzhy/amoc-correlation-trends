@@ -98,3 +98,29 @@ of Part 2A, which — judged by the same effective-sample-size method — was on
 marginally significant; a large r with few independent samples can still be highly
 significant when r is this strong, whereas a small slope with the same N_eff sits
 at the edge.
+
+
+
+## Part 3 — Depth sensitivity of the geostrophic transport
+
+To test how much the Part 1 result depends on a choice I made rather than on the
+data, I recompute the geostrophic transport integrating to three upper limits — 700,
+1000 and 1100 m — and compare each with the published `TRANS_UMO`. The question is
+whether the integration depth is a free knob that could be tuned to improve the
+match, or a physically fixed choice.
+
+The mean transport becomes *less* southward as the limit deepens (−16.4 Sv at 700 m,
+−14.1 at 1000 m, −13.5 at 1100 m), while its variance grows (std 4.4 → 5.5 Sv). The
+deeper layers therefore add a *northward* increment to the interior transport,
+consistent with the northward Antarctic Intermediate Water present around
+800–1100 m — which is precisely why RAPID integrates the upper mid-ocean transport
+down to the depth of the AMOC maximum (~1100 m) rather than a shallower level.
+Counter-intuitively, the correlation with `TRANS_UMO` is slightly *higher* at 700 m
+(r = 0.787) than at 1100 m (r = 0.763), and the shallow estimate is also smoother.
+So the metric and the physics disagree: I could raise the correlation by stopping at
+700 m, but that would be tuning the depth to the answer. The defensible choice is
+1100 m, because that is how the published product is defined — matching the AMOC
+maximum and including the northward AAIW layer. The exercise shows the sensitivity
+is real (a 3 Sv spread in the mean across 400 m of integration depth) but that the
+correct depth is set by the physics of the overturning cell, not by whichever value
+best reproduces the target series.
