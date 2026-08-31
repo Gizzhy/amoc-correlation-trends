@@ -8,34 +8,34 @@ The accompanying ``pytest`` checks encode the behaviour they must satisfy.
 
 from .correlation import (
     autocorr,
-    integral_timescale,
-    effective_dof,
     cross_correlation,
+    effective_dof,
+    integral_timescale,
 )
-from .trends import fit_trend, trend_with_significance, TrendResult
-from .data_io import load_amoc, load_ts_gridded, load_47n, load_moc_sigma0_26n
+from .data_io import load_47n, load_amoc, load_moc_sigma0_26n, load_ts_gridded
 from .geostrophy import (
-    to_teos10,
     dynamic_height,
     interior_geostrophic_transport,
+    to_teos10,
 )
-from .seasonal import seasonal_climatology, remove_seasonal_cycle
+from .seasonal import remove_seasonal_cycle, seasonal_climatology
+from .trends import TrendResult, fit_trend, trend_with_significance
 
 __all__ = [
-    "autocorr",
-    "integral_timescale",
-    "effective_dof",
-    "cross_correlation",
-    "fit_trend",
-    "trend_with_significance",
     "TrendResult",
-    "load_amoc",
-    "load_ts_gridded",
-    "load_47n",
-    "load_moc_sigma0_26n",
-    "to_teos10",
+    "autocorr",
+    "cross_correlation",
     "dynamic_height",
+    "effective_dof",
+    "fit_trend",
+    "integral_timescale",
     "interior_geostrophic_transport",
-    "seasonal_climatology",
+    "load_47n",
+    "load_amoc",
+    "load_moc_sigma0_26n",
+    "load_ts_gridded",
     "remove_seasonal_cycle",
+    "seasonal_climatology",
+    "to_teos10",
+    "trend_with_significance",
 ]
