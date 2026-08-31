@@ -1,3 +1,35 @@
+## Part 1 — Geostrophic transport vs TRANS_UMO
+
+I compute the upper mid-ocean geostrophic transport at 26°N from the RAPID boundary
+hydrography (`ts_gridded`): converting the western and eastern boundary T/S profiles
+to TEOS-10, forming the dynamic height at each boundary referenced to 4820 dbar,
+differencing them for the zonally-integrated thermal-wind transport per unit depth,
+and integrating from the surface to **1100 m** — the depth of the AMOC maximum. I
+integrate only to 1100 m rather than the full water column because the *upper*
+mid-ocean transport is defined as the northward/southward interior flow above the
+overturning maximum; extending the integral deeper would fold in the southward NADW
+and the deep return limbs, giving the full-depth interior transport rather than the
+upper-ocean cell that balances the Gulf Stream and Ekman inflow.
+
+Compared with RAPID's published `TRANS_UMO` over the common 2004–2024 record
+(14,579 paired points), my estimate correlates at r = 0.76 (r² ≈ 0.58) and tracks
+its variability in phase, but differs in two systematic ways. First, a mean offset:
+my transport averages −13.5 Sv against the published −18.4 Sv, i.e. ~5 Sv less
+southward. This is expected — the official product additionally splits the interior
+at the Mid-Atlantic Ridge and applies a basin-wide mass-balance (external-transport)
+adjustment, neither of which my single east–west baroclinic estimate includes, and
+both of which shift the mean. Second, my estimate carries more variance (std 5.5 Sv
+vs 3.4 Sv): the mass-balance adjustment in the published product removes a
+barotropic/external component that my baroclinic-only calculation retains as extra
+scatter. This shows directly in the scatter plot, where the regression slope is 0.47
+rather than 1 — a unit change in my noisier estimate maps to about half a unit in
+the smoother published series. So the thermal-wind calculation recovers the sign,
+the timing, and the bulk of the interior transport variability, with the residual
+differences attributable to the interior partition and mass-balance steps that the
+operational product adds.
+
+
+
 ## Part 2A — Seasonal cycle and trend
 
 **26°N MOC.** The overturning transport (2004-04 to 2024-03, 14,579 twelve-hourly
