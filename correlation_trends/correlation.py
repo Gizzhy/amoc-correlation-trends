@@ -78,63 +78,21 @@ def integral_timescale(x: ArrayLike, dt: float, biased: bool = True) -> float:
 
 
 def effective_dof(x: ArrayLike, dt: float, biased: bool = True) -> float:
-    """Effective (equivalent) degrees of freedom ``EDOF`` for a series.
-
-    Following Emery & Thomson, the raw degrees of freedom are
-    ``DOF = record / T*`` and the *equivalent* degrees of freedom are
-    ``EDOF = DOF / 2 = record / (2 T*)``. Use ``EDOF`` — not ``DOF`` — for error
-    bars, confidence intervals, and significance tests: the factor of two comes
-    from the two-sided variance sum ``1 + 2 sum rho_k``.
-
-    Parameters
-    ----------
-    x : array_like
-        Input series.
-    dt : float
-        Sample spacing.
-    biased : bool, default True
-        Estimator passed through to :func:`integral_timescale`.
-
-    Returns
-    -------
-    float
-        ``EDOF = record / (2 T*)``, where ``record = N * dt``.
-    """
-    # tstar = integral_timescale(x, dt, biased=biased)
-    # record = N * dt  (N = number of finite samples)
-    # EDOF = record / (2 * T*)   -- the factor of 2 is DOF -> EDOF
-    raise NotImplementedError("effective_dof")
+    d = np.asarray(x, dtype=float)
+    d = d[np.isfinite(d)]
+    n = d.size
+    tstar = integral_timescale(d, dt, biased=biased)
+    return (n * dt) / (2.0 * tstar)
 
 
 def cross_correlation(
     x: ArrayLike, y: ArrayLike
 ) -> tuple[NDArray[np.int_], NDArray[np.float64]]:
-    """Normalised cross-correlation of two series, with the lag axis.
-
-    Both series are standardised (subtract mean, divide by standard deviation)
-    and correlated at every integer lag.
-
-    Parameters
-    ----------
-    x, y : array_like
-        Two series of equal length.
-
-    Returns
-    -------
-    lags : numpy.ndarray
-        Integer lags, from ``-(N-1)`` to ``N-1``.
-    r : numpy.ndarray
-        Cross-correlation at each lag; ``r`` peaks at the lag that best aligns
-        the two series.
-
-    Notes
-    -----
-    Sign convention: the peak sits at the lag by which ``y`` is shifted relative
-    to ``x``. If ``y`` lags ``x`` by ``k`` samples (``x`` leads) the peak is at
-    ``-k``; so a **negative** peak lag means ``x`` leads ``y``, a positive one
-    means ``y`` leads ``x``.
-    """
-    # xa = (x - np.mean(x)) / np.std(x)
-    # ya = (y - np.mean(y)) / np.std(y)
-    # then signal.correlate(xa, ya, mode="full") / N and signal.correlation_lags(...)
-    raise NotImplementedError("cross_correlation")
+    xa = np.asarray(x, dtype=float)
+    ya = np.asarray(y, dtype=float)
+    xa = (xa - xa.mean()) / xa.std()
+    ya = (ya - ya.mean()) / ya.std()
+    n = xa.size
+    r = signal.correlate(xa, ya, mode="full") / n
+    lags = signal.correlation_lags(xa.size, ya.size, mode="full")
+    return lags, r
