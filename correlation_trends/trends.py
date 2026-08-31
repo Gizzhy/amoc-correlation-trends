@@ -67,40 +67,22 @@ def fit_trend(t: ArrayLike, x: ArrayLike) -> tuple[float, float]:
 
 
 def trend_with_significance(t: ArrayLike, x: ArrayLike, dt: float) -> TrendResult:
-    """Slope, its standard error, ``slope/SE``, and autocorrelation-aware p-values.
-
-    The naive standard error assumes independent residuals. For a red-noise
-    series that is optimistic: neighbouring residuals are correlated, so the
-    record carries fewer independent samples than ``N``. The honest version
-    replaces ``N`` by the effective sample size ``N_eff`` derived from the
-    two-sided integral timescale of the residuals, inflating the SE by
-    ``sqrt(N / N_eff)``.
-
-    Parameters
-    ----------
-    t : array_like
-        Predictor (time), same units implied by ``dt``.
-    x : array_like
-        Response series.
-    dt : float
-        Sample spacing (present for interface symmetry; ``N_eff`` here is a
-        sample count and does not depend on ``dt``).
-
-    Returns
-    -------
-    TrendResult
-        Slope, intercept, naive and effective SE, p-values, ``N_eff``, and the
-        ``slope/SE`` ratios ``t_naive`` and ``t_eff``.
-
-    Notes
-    -----
-    ``sigma`` in ``slope/SE`` is the standard error *of the slope itself* -- how
-    much the fitted slope would wobble on resampling -- not the scatter of the
-    data about the line. Significant at 95% means ``|slope| > ~1.96 * SE``.
-    """
-    # slope, intercept = fit_trend(t, x)
-    # resid = x - (slope * t + intercept)
-    # OLS slope SE:  sqrt( sum(resid**2)/(N-2) / sum((t - t.mean())**2) )
-    # effective sample size from the residuals:  n_eff = effective_dof(resid, dt)
-    # se_eff = se * sqrt(N / n_eff);  t = slope/se;  p = 2 * stats.t.sf(|t|, dof)
-    raise NotImplementedError("trend_with_significance")
+    t = np.asarray(t, dtype=float)
+    x = np.asarray(x, dtype=float)
+    n = t.size
+    slope, intercept = fit_trend(t, x)
+    resid = x - (slope * t + intercept)
+    ss_t = np.sum((t - t.mean()) ** 2)
+    sigma2 = np.sum(resid ** 2) / (n - 2)
+    se = np.sqrt(sigma2 / ss_t)
+    n_eff = effective_dof(resid, dt)
+    se_eff = se * np.sqrt(n / n_eff)
+    t_naive = slope / se
+    t_eff = slope / se_eff
+    p_naive = 2.0 * stats.t.sf(abs(t_naive), n - 2)
+    p_eff = 2.0 * stats.t.sf(abs(t_eff), max(n_eff - 2.0, 1.0))
+    return TrendResult(
+        slope=float(slope), intercept=float(intercept), se=float(se),
+        se_eff=float(se_eff), p_naive=float(p_naive), p_eff=float(p_eff),
+        n_eff=float(n_eff), t_naive=float(t_naive), t_eff=float(t_eff),
+    )

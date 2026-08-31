@@ -31,31 +31,5 @@ def seasonal_climatology(da: xr.DataArray, group: str = "TIME.month") -> xr.Data
 
 
 def remove_seasonal_cycle(da: xr.DataArray, group: str = "TIME.month") -> xr.DataArray:
-    """Return the series with its mean annual cycle removed, **mean preserved**.
-
-    Subtract the monthly climatology (which removes the seasonal *departures* and
-    the overall mean) and then add the overall mean back, so the deseasonalised
-    series sits at the same level as the original -- only the seasonal wiggle is
-    gone, not the mean.
-
-    Parameters
-    ----------
-    da : xarray.DataArray
-        Series with a datetime ``TIME`` coordinate.
-    group : str, default "TIME.month"
-        Grouping key passed to :func:`seasonal_climatology`.
-
-    Returns
-    -------
-    xarray.DataArray
-        ``da`` with the seasonal cycle removed, on the original ``TIME`` axis,
-        retaining the original overall mean.
-
-    Examples
-    --------
-    >>> clim = da.groupby("TIME.month").mean()
-    >>> deseasonalised = da.groupby("TIME.month") - clim + da.mean()
-    """
-    # clim = seasonal_climatology(da, group)
-    # then subtract it and add da.mean() back (keep the series' overall level)
-    raise NotImplementedError("remove_seasonal_cycle")
+    clim = seasonal_climatology(da, group)
+    return da.groupby(group) - clim + da.mean()
